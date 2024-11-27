@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime currentDay = DateTime.now();
 
   // Tamanho da lista
-  int windowPage = 10;
+  int windowPage = 11;
 
   // A base de dados mostrada na lista
   Map<String, Journal> database = {};
