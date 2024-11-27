@@ -6,7 +6,13 @@ import 'package:uuid/uuid.dart';
 class JournalCard extends StatelessWidget {
   final Journal? journal;
   final DateTime showedDate;
-  const JournalCard({super.key, this.journal, required this.showedDate});
+  final Function refreshFunction;
+  const JournalCard({
+    super.key,
+    this.journal,
+    required this.showedDate,
+    required this.refreshFunction,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +86,14 @@ class JournalCard extends StatelessWidget {
     } else {
       return InkWell(
         onTap: () {
-          Navigator.pushNamed(context, "addJournal", arguments: Journal(
-            id: Uuid().v1(),
-            content: "",
-            createdAt: showedDate,
-            updatedAt: showedDate,
-          )).then((value) {
+          Navigator.pushNamed(context, "addJournal",
+              arguments: Journal(
+                id: Uuid().v1(),
+                content: "",
+                createdAt: showedDate,
+                updatedAt: showedDate,
+              )).then((value) {
+            refreshFunction();
             if (value != null && value == true) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
