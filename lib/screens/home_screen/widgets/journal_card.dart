@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/helpers/weekday.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
+import 'package:flutter_webapi_first_course/services/journal_service.dart';
 import 'package:uuid/uuid.dart';
 
 class JournalCard extends StatelessWidget {
@@ -18,7 +19,9 @@ class JournalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (journal != null) {
       return InkWell(
-        onTap: () {},
+        onTap: () {
+          callAddJournalScreen(context, journal: journal);
+        },
         child: Container(
           height: 115,
           margin: const EdgeInsets.all(8),
@@ -79,6 +82,14 @@ class JournalCard extends StatelessWidget {
                   ),
                 ),
               ),
+              IconButton(
+                onPressed: () {
+                  if(journal != null){
+                    deleteItem(context, journal!.id);
+                  }
+                },
+                icon: Icon(Icons.delete),
+              )
             ],
           ),
         ),
@@ -86,22 +97,7 @@ class JournalCard extends StatelessWidget {
     } else {
       return InkWell(
         onTap: () {
-          Navigator.pushNamed(context, "addJournal",
-              arguments: Journal(
-                id: Uuid().v1(),
-                content: "",
-                createdAt: showedDate,
-                updatedAt: showedDate,
-              )).then((value) {
-            refreshFunction();
-            if (value != null && value == true) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Registro salvo com sucesso!"),
-                ),
-              );
-            }
-          });
+          callAddJournalScreen(context);
         },
         child: Container(
           height: 115,
@@ -114,5 +110,54 @@ class JournalCard extends StatelessWidget {
         ),
       );
     }
+  }
+
+  callAddJournalScreen(BuildContext context, {Journal? journal}) {
+    Journal innerJournal = Journal(
+      id: Uuid().v1(),
+      content: "",
+      createdAt: showedDate,
+      updatedAt: showedDate,
+    );
+    Map<String, dynamic> arguments = {};
+
+    if (journal != null) {
+      innerJournal = journal;
+      arguments["isUpdate"] = true;
+    } else {
+      arguments["isUpdate"] = false;
+    }
+
+    arguments["journal"] = innerJournal;
+
+    Navigator.pushNamed(
+      context,
+      "addJournal",
+      arguments: arguments,
+    ).then((value) {
+      refreshFunction();
+      if (value != null && value == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Registro salvo com sucesso!"),
+          ),
+        );
+      }
+    });
+  }
+
+  deleteItem(BuildContext context, String id) {
+    JournalService service = JournalService();
+    service.delete(id).then((value) {
+      if (value){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Registro excluído com sucesso!"),
+          ),
+        );
+        refreshFunction();
+      }
+      
+    });
   }
 }
