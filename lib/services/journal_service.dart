@@ -32,6 +32,31 @@ class JournalService {
     return false;
   }
 
+  Future<bool> update(Journal journal) async {
+    String jsonJournal = json.encode(journal.toMap());
+    http.Response response = await client.put(
+      Uri.parse("${getURL()}${journal.id}"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonJournal,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } 
+
+    return false;
+  }
+
+  Future<bool> delete(String id) async {
+    http.Response response = await client.delete(Uri.parse("${getURL()}$id"));
+
+    if (response.statusCode == 200) {
+      return true;
+    } 
+
+    return false;
+  }
+
   Future<List<Journal>> getAll() async {
     http.Response response = await client.get(Uri.parse(getURL()));
 
