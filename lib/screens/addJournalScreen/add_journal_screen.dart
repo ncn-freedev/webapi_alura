@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_webapi_first_course/helpers/logout.dart';
 import 'package:flutter_webapi_first_course/helpers/weekday.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
+import 'package:flutter_webapi_first_course/screens/commom/exception_dialog.dart';
 import 'package:flutter_webapi_first_course/services/journal_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddJournalScreen extends StatelessWidget {
   final Journal journal;
@@ -21,18 +26,37 @@ class AddJournalScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              journal.content = _contentController.text;
-              JournalService service = JournalService();
-              if (isUpdate == true) {
-                service.update(journal).then((value) {
-                  Navigator.pop(context, value);
-                });
-                return;
-              } else {
-                service.register(journal).then((value) {
-                Navigator.pop(context, value);
-                });
-              }
+              SharedPreferences.getInstance().then((prefs) {
+                String? token = prefs.getString("accessToken");
+                if (token != null) {
+                  journal.content = _contentController.text;
+                  JournalService service = JournalService();
+                  if (isUpdate == true) {
+                    service.update(journal, token).then((value) {
+                      Navigator.pop(context, value);
+                    }).catchError((error) {
+                      logout(context);
+                    },
+                        test: (error) =>
+                            error is TokenNotValidException).catchError(
+                        (error) {
+                      showExceptionDialog(context, content: error.message);
+                    }, test: (error) => error is HttpException);
+                    return;
+                  } else {
+                    service.register(journal, token).then((value) {
+                      Navigator.pop(context, value);
+                    }).catchError((error) {
+                      logout(context);
+                    },
+                        test: (error) =>
+                            error is TokenNotValidException).catchError(
+                        (error) {
+                      showExceptionDialog(context, content: error.message);
+                    }, test: (error) => error is HttpException);
+                  }
+                }
+              });
             },
           ),
         ],

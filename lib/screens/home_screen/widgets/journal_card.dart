@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_webapi_first_course/helpers/logout.dart';
 import 'package:flutter_webapi_first_course/helpers/weekday.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
+import 'package:flutter_webapi_first_course/screens/commom/confirmation_dialog.dart';
+import 'package:flutter_webapi_first_course/screens/commom/exception_dialog.dart';
 import 'package:flutter_webapi_first_course/services/journal_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -8,11 +13,16 @@ class JournalCard extends StatelessWidget {
   final Journal? journal;
   final DateTime showedDate;
   final Function refreshFunction;
+  final int userId;
+  final String token;
+  
   const JournalCard({
     super.key,
     this.journal,
     required this.showedDate,
     required this.refreshFunction,
+    required this.userId,
+    required this.token,
   });
 
   @override
@@ -84,8 +94,17 @@ class JournalCard extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  if(journal != null){
-                    deleteItem(context, journal!.id);
+                  if (journal != null) {
+                    showConfirmationDialog(
+                      context,
+                      content: "Deseja realmente excluir este registro",
+                      affimativeOption: "Remover",
+                    ).then((value){
+                      if(value != null && value){
+                        deleteItem(context, journal!.id);
+                      }
+                    });
+                    
                   }
                 },
                 icon: Icon(Icons.delete),
@@ -118,6 +137,7 @@ class JournalCard extends StatelessWidget {
       content: "",
       createdAt: showedDate,
       updatedAt: showedDate,
+      userID: userId,
     );
     Map<String, dynamic> arguments = {};
 
@@ -148,8 +168,8 @@ class JournalCard extends StatelessWidget {
 
   deleteItem(BuildContext context, String id) {
     JournalService service = JournalService();
-    service.delete(id).then((value) {
-      if (value){
+    service.delete(id, token).then((value) {
+      if (value) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Registro excluído com sucesso!"),
@@ -157,7 +177,10 @@ class JournalCard extends StatelessWidget {
         );
         refreshFunction();
       }
-      
-    });
+    }).catchError((error) {
+      logout(context);
+    }, test: (error) => error is TokenNotValidException).catchError((error){
+      showExceptionDialog(context, content: error.message);
+    }, test: (error) => error is HttpException);
   }
 }

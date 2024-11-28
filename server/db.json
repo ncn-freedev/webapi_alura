@@ -1,8 +1,76 @@
 {
-  "learnhttp": {
-   
-  },
+  "users": [
+    {
+      "email": "nicolas@gmail.com",
+      "password": "$2a$10$Ty35vZbwDJ6C/Y0NnxC6GOHIYi8tn9F0OGAmn7LyddMjjeZqUhJye",
+      "id": 1
+    },
+    {
+      "email": "nicolas2@gmail.com",
+      "password": "$2a$10$.DhqLR3F4SEanf7B4v.pyOv4cvqsYuoWanOz.qZC9jj74COXXX2pS",
+      "id": 2
+    },
+    {
+      "email": "teste@gmail.com",
+      "password": "$2a$10$iMovtZ74a8wMVChbFpnU5u4030YtSdXzm.gehBR0vj3T.xI7Se9ce",
+      "id": 3
+    },
+    {
+      "email": "nicolas3@gmail.com",
+      "password": "$2a$10$/Ppujy5tQ1pJKmx/5BfZkeVS4mslIFvK2J/lP5FlerlZscvvZerzC",
+      "id": 4
+    }
+  ],
+  "learnhttp": {},
   "journals": [
-    
+    {
+      "id": "e1aee060-ada8-11ef-8076-4f5d10841655",
+      "content": "555",
+      "created_at": "2024-11-18T16:50:30.944523",
+      "updated_at": "2024-11-18T16:50:30.944523",
+      "userId": 2
+    },
+    {
+      "id": "1a1867a0-ada9-11ef-a650-adde20442582",
+      "content": "444",
+      "created_at": "2024-11-19T16:52:04.243597",
+      "updated_at": "2024-11-19T16:52:04.243597",
+      "userId": 2
+    },
+    {
+      "id": "2dbbb7d0-ada9-11ef-a650-adde20442582",
+      "content": "aa",
+      "created_at": "2024-11-17T16:52:30.373504",
+      "updated_at": "2024-11-17T16:52:30.373504",
+      "userId": 3
+    },
+    {
+      "id": "d2d6ec30-adae-11ef-944d-2f0942ec3f71",
+      "content": "888",
+      "created_at": "2024-11-20T17:33:01.829369",
+      "updated_at": "2024-11-20T17:33:01.829369",
+      "userId": 1
+    },
+    {
+      "id": "07231ba0-adb2-11ef-9a8a-996608ee8f2c",
+      "content": "11111",
+      "created_at": "2024-11-20T17:55:58.270008",
+      "updated_at": "2024-11-20T17:55:58.270008",
+      "userId": 4
+    },
+    {
+      "id": "d4217b50-adb3-11ef-8063-8d7780935192",
+      "content": "666",
+      "created_at": "2024-11-18T18:08:49.252421",
+      "updated_at": "2024-11-18T18:08:49.252421",
+      "userId": 1
+    },
+    {
+      "id": "dc402fc0-adb3-11ef-8063-8d7780935192",
+      "content": "656",
+      "created_at": "2024-11-17T18:08:49.252421",
+      "updated_at": "2024-11-17T18:08:49.252421",
+      "userId": 1
+    }
   ]
 }
